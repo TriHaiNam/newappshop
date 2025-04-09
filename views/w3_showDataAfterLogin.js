@@ -8,7 +8,7 @@ export default function ProductListScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(db, 'products'));
+      const querySnapshot = await getDocs(collection(db, 'product')); // ✅ Đúng tên
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push({ id: doc.id, ...doc.data() });
@@ -21,9 +21,10 @@ export default function ProductListScreen() {
 
   const renderItem = ({ item }) => (
     <View style={styles.card}>
-      <Image source={{ uri: item.image }} style={styles.image} />
-      <Text style={styles.name}>{item.name}</Text>
+      <Image source={{ uri: item.image_url }} style={styles.image} /> {/* ✅ Đúng tên key */}
+      <Text style={styles.name}>{item.product_name}</Text>
       <Text style={styles.price}>{item.price.toLocaleString()}₫</Text>
+      <Text style={styles.description}>{item.description}</Text>
     </View>
   );
 
