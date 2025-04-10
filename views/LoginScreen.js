@@ -15,6 +15,7 @@ const LoginScreen = ({ navigation }) => {
         navigation.navigate('W3_showDataAfterLogin'); // Chuyển hướng đến màn hình w3_showDataAfterLogin
       })
       .catch((error) => {
+        console.log(error);
         Alert.alert('Login Failed', error.message);
       });
   };
