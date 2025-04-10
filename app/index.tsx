@@ -1,21 +1,26 @@
-import { StyleSheet, Text, View } from "react-native";
-import { db, auth } from '@/constants/firebaseConfig';
-import W3_showDataAfterLogin from "@/views/w3_showDataAfterLogin";
+import { registerRootComponent } from 'expo';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from '../views/LoginScreen';
+import RegisterScreen from '../views/ResigterScreen';
+import W3_showDataAfterLogin from '../views/w3_showDataAfterLogin';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <W3_showDataAfterLogin />
-
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen
+          name="W3_showDataAfterLogin"
+          component={W3_showDataAfterLogin}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-});
+registerRootComponent(App);
