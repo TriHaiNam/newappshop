@@ -4,20 +4,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../views/LoginScreen';
 import RegisterScreen from '../views/ResigterScreen';
-import W3_showDataAfterLogin from '../views/w3_showDataAfterLogin';
+import ProductListScreen from '../views/ProductListScreen';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen
-          name="W3_showDataAfterLogin"
-          component={W3_showDataAfterLogin}
-        />
+      <Stack.Navigator initialRouteName="LoginScreen">
+        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ title: 'Login' }} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Register' }} />
+        <Stack.Screen name="ProductListScreen" component={ProductListScreen} options={{ title: 'Products' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
