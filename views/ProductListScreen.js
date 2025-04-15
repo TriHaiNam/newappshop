@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, Button, Alert } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, Button, Alert, TouchableOpacity } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/constants/firebaseConfig';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -9,6 +9,7 @@ export default function ProductListScreen() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userPhotoURL, setUserPhotoURL] = useState(null);
   const navigation = useNavigation();
   const auth = getAuth();
 
@@ -17,6 +18,8 @@ export default function ProductListScreen() {
       if (user) {
         console.log('User authenticated:', user.email); // Debug
         setIsAuthenticated(true);
+        // Check if user has a photo URL
+        setUserPhotoURL(user.photoURL);
         fetchData();
       } else {
         console.log('User not authenticated, redirecting to LoginScreen'); // Debug
@@ -58,6 +61,10 @@ export default function ProductListScreen() {
       });
   };
 
+  const navigateToEditProfile = () => {
+    navigation.navigate('EditProfileScreen');
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Image
@@ -85,11 +92,28 @@ export default function ProductListScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Avatar in top right corner with improved styling */}
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Text style={styles.headerTitle}>Products</Text>
+          <TouchableOpacity 
+            style={styles.avatarContainer}
+            onPress={navigateToEditProfile}
+            activeOpacity={0.7}
+          >
+            <Image 
+              source={userPhotoURL ? { uri: userPhotoURL } : require('../assets/img/default-avatar.jpg')}
+              style={styles.avatar}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    
       <FlatList
+        contentContainerStyle={[styles.listContainer, { paddingTop: 70 }]}
         data={products}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
         ListEmptyComponent={<Text style={styles.emptyText}>No products available</Text>}
       />
       <View style={styles.menuBar}>
@@ -159,5 +183,63 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#ccc',
     alignItems: 'center',
+  },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 60,
+    backgroundColor: '#fff',
+    zIndex: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    height: '100%',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  avatarContainer: {
+    position: 'relative',
+    padding: 3,
+    backgroundColor: '#fff',
+    borderRadius: 28,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4,
+  },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    backgroundColor: '#e1e1e1', // Add a background color as fallback
+  },
+  avatarBadge: {
+    position: 'absolute',
+    bottom: 2,
+    right: 2,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#4CAF50', // Green badge indicating "online" or "logged in"
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  listContainer: {
+    padding: 16,
   },
 });
