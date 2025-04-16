@@ -92,25 +92,22 @@ export default function ProductListScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Avatar in top right corner with improved styling */}
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Products</Text>
+      {/* Header with fixed positioning */}
           <TouchableOpacity 
             style={styles.avatarContainer}
             onPress={navigateToEditProfile}
             activeOpacity={0.7}
+            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}} // Improve touch target without expanding visual size
           >
             <Image 
               source={userPhotoURL ? { uri: userPhotoURL } : require('../assets/img/default-avatar.jpg')}
               style={styles.avatar}
             />
           </TouchableOpacity>
-        </View>
-      </View>
-    
+      
+      {/* FlatList with proper padding to account for header */}
       <FlatList
-        contentContainerStyle={[styles.listContainer, { paddingTop: 70 }]}
+        contentContainerStyle={styles.listContainer}
         data={products}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -184,33 +181,11 @@ const styles = StyleSheet.create({
     borderTopColor: '#ccc',
     alignItems: 'center',
   },
-  header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-    backgroundColor: '#fff',
-    zIndex: 10,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    height: '100%',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+
   avatarContainer: {
-    position: 'relative',
+    position: 'absolute',
+    top: 10,
+    right: 10,
     padding: 3,
     backgroundColor: '#fff',
     borderRadius: 28,
@@ -219,6 +194,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 4,
+    zIndex: 10, // Ensures it appears above other elements
   },
   avatar: {
     width: 44,
@@ -241,5 +217,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 16,
+    paddingTop: 76, // Increased padding to account for header height (60) + some extra space
   },
 });
